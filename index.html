@@ -8,7 +8,6 @@
 <meta name="theme-color" content="#006C35">
 <link rel="manifest" href="/ahmed-guide/manifest.json">
 <title>دليل السعودية الشامل</title>
-   <script src="/ahmed-guide/data.js"></script
 <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
     body { background: #f0f4f3; color: #333; padding-bottom: 20px; }
@@ -37,9 +36,7 @@
     .btn-group { display: flex; gap: 10px; }
     .action-btn { flex: 1; padding: 8px; border-radius: 8px; text-align: center; text-decoration: none; font-weight: bold; font-size: 13px; color: white; }
     .map-btn { background: #27ae60; }
-    .call-btn { background: #e74c3c; } /* أحمر للاتصال */
-    .law-btn { background: #8e44ad; }
-    .news-btn { background: #34495e; } 
+    .call-btn { background: #e74c3c; }
 </style>
 </head>
 <body>
@@ -49,7 +46,6 @@
             <div class="lang-container">
                 <button class="lang-btn active" onclick="changeLanguage('ar', event)">عربي</button>
                 <button class="lang-btn" onclick="changeLanguage('en', event)">EN</button>
-                <button class="lang-btn" onclick="changeLanguage('fr', event)">FR</button>
             </div>
             <select class="city-select" id="city-selector" onchange="changeCity(this.value)">
                 <option value="none" selected>حدد مدينتك 📍</option>
@@ -89,185 +85,91 @@
 
 <script>
 const ui = {
-    ar: { title: 'دليل السعودية الشامل', back: '⬅ رجوع', map: 'الخريطة', selectCityAlert: 'من فضلك اختر مدينتك من الأعلى أولاً 📍', gpsBtn: '📍 اضغط لمعرفة الأقرب إليك', loadingGps: 'جاري تحديد موقعك...', readMore: 'الموقع الرسمي', visitSite: 'زيارة الموقع', callNow: 'اتصل 999' },
-    en: { title: 'Saudi Guide', back: '⬅ Back', map: 'Map', selectCityAlert: 'Please select your city first 📍', gpsBtn: '📍 Click to find nearest', loadingGps: 'Locating...', readMore: 'Official Website', visitSite: 'Visit Website', callNow: 'Call 999' },
-    fr: { title: 'Guide Saoudien', back: '⬅ Retour', map: 'Carte', selectCityAlert: 'Veuillez d\'abord sélectionner votre ville 📍', gpsBtn: '📍 Cliquez pour trouver le plus proche', loadingGps: 'Localisation...', readMore: 'Site Officiel', visitSite: 'Visiter le site', callNow: 'Appeler 999' }
+    ar: { title: 'دليل السعودية الشامل', back: '⬅ رجوع', map: 'الخريطة', selectCityAlert: 'من فضلك اختر مدينتك من الأول 📍', gpsBtn: '📍 اضغط لمعرفة الأقرب إليك', loadingGps: 'جاري تحديد موقعك...' },
+    en: { title: 'Saudi Guide', back: '⬅ Back', map: 'Map', selectCityAlert: 'Please select your city 📍', gpsBtn: '📍 Click to find nearest', loadingGps: 'Locating...' }
 };
 
 let currLang = 'ar';
 let currCity = 'none';
 
 const cityCenters = {
-    'riyadh': [24.7136, 46.6753], 'jeddah': [21.4858, 39.1925], 'makkah': [21.3891, 39.8579], 'madinah': [24.4672, 39.6111], 'dammam': [26.4207, 50.0888], 'khobar': [26.2794, 50.2083], 'dhahran': [26.2886, 50.1140], 'taif': [21.2854, 40.4183], 'tabuk': [28.3835, 36.5662], 'abha': [18.2164, 42.5053], 'buraidah': [26.3260, 43.9750], 'hail': [27.5219, 41.6907], 'jazan': [16.8892, 42.5511], 'najran': [17.4917, 44.1322], 'jubail': [27.0046, 49.6460], 'yanbu': [24.0895, 38.0618], 'ahsa': [25.3833, 49.5833], 'arar': [30.9753, 41.0381], 'sakaka': [29.9697, 40.2064], 'bahah': [20.0129, 41.4677]
+    'riyadh': [24.7136, 46.6753, '011'], 'jeddah': [21.4858, 39.1925, '012'], 'makkah': [21.3891, 39.8579, '012'], 'madinah': [24.4672, 39.6111, '014'], 'dammam': [26.4207, 50.0888, '013'], 'khobar': [26.2794, 50.2083, '013'], 'dhahran': [26.2886, 50.1140, '013'], 'taif': [21.2854, 40.4183, '012'], 'tabuk': [28.3835, 36.5662, '014'], 'abha': [18.2164, 42.5053, '017'], 'buraidah': [26.3260, 43.9750, '016'], 'hail': [27.5219, 41.6907, '016'], 'jazan': [16.8892, 42.5511, '017'], 'najran': [17.4917, 44.1322, '017'], 'jubail': [27.0046, 49.6460, '013'], 'yanbu': [24.0895, 38.0618, '014'], 'ahsa': [25.3833, 49.5833, '013'], 'arar': [30.9753, 41.0381, '014'], 'sakaka': [29.9697, 40.2064, '014'], 'bahah': [20.0129, 41.4677, '017']
 };
 
 const neighborhoods = ['حي العليا', 'حي الملز', 'حي النخيل', 'حي الروضة', 'حي الشاطئ', 'حي الأندلس', 'حي الفيصلية', 'حي المروج', 'حي الصحافة', 'حي الياسمين', 'حي السويدي', 'حي الشفاء', 'حي العزيزية', 'حي الحمراء', 'حي النزهة', 'حي الغدير', 'حي الورود', 'حي الملقا', 'حي حطين', 'حي القيروان'];
 
-// 1. المطاعم (20 مطعم)
-const restaurantNames = ['البيك','هرفي','كودو','ماكدونالدز','شاورمر','KFC','هارديز','برجر كنج','بيتزا هت','دومينوز','مايسترو بيتزا','جان برجر','بارنز','صب وي','الطازج','برجرز','فايف قايز','بابا جونز','شاورما هليل','ريشال'];
-let rData = {};
-for (const city in cityCenters) {
-    rData[city] = restaurantNames.map((name) => [name, 'فرع ' + city, cityCenters[city][0] + (Math.random() - 0.5) * 0.1, cityCenters[city][1] + (Math.random() - 0.5) * 0.1]);
-}
-
-// 2. الصيدليات (20 صيدلية)
-const pharmacyNames = ['النهدي', 'الدواء', 'وايتس', 'رصاصة', 'الجزيرة', 'الأمين', 'المتحدة', 'الشفاء', 'العناية', 'الحياة', 'السلام', 'الأمل', 'الوفاء', 'ابن سينا', 'الرازي', 'التخصصي', 'المدار', 'الشرق', 'الغدير', 'الوسام'];
-let pData = {};
-for (const city in cityCenters) {
-    pData[city] = pharmacyNames.map((name, i) => [ 'صيدلية ' + name, neighborhoods[i % neighborhoods.length] + ' - ' + city, cityCenters[city][0] + (Math.random() - 0.5) * 0.08, cityCenters[city][1] + (Math.random() - 0.5) * 0.08]);
-}
-
-// 3. عيادات الأسنان (25 عيادة)
-const dentalNames = ['عيادات أندلسية لطب الأسنان', 'مركز المرجان لطب الأسنان', 'عيادات د. سليمان الحبيب (أسنان)', 'مجمع عيادات النخبة', 'مركز الابتسامة الرقمية', 'عيادات سمايل (Smile)', 'مركز الأسنان التخصصي', 'مجمع الرياض الطبي (أسنان)', 'عيادات د. خالد التخصصي', 'مركز دنتال كير', 'عيادات الماسة', 'مركز الشرق لطب الأسنان', 'عيادات الوفاء', 'مركز طب الأسنان الحديث', 'عيادات إشراقة', 'مركز دلة لطب الأسنان', 'عيادات المملكة', 'مركز الأسنان الدولي', 'عيادات البسمة', 'مركز ليزر للأسنان', 'عيادات الرحمة', 'مركز الأسنان المتكامل', 'مجمع عيادات الصحة', 'مركز مدار لطب الأسنان', 'عيادات التخصصي'];
-let dData = {};
-for (const city in cityCenters) {
-    dData[city] = dentalNames.map((name, i) => {
-        let rating = (Math.random() * 1.5 + 3.5).toFixed(1);
-        return [ name + ' - ' + city, neighborhoods[i % neighborhoods.length] + ' - ' + city, cityCenters[city][0] + (Math.random() - 0.5) * 0.08, cityCenters[city][1] + (Math.random() - 0.5) * 0.08, rating ];
-    });
-}
-
-// 4. المولات (30 مول)
-const mallNames = ['الرياض بارك', 'ريد سي مول', 'مول العرب', 'النخيل مول', 'غرناطة مول', 'الفيصلية مول', 'صحارى مول', 'الظهران مول', 'الراشد مول', 'العثيم مول', 'خريص بلازا', 'بانوراما مول', 'ميقا مول', 'سنتر بوينت', 'الواحة مول', 'سلام مول', 'الحمراء مول', 'دريم مول', 'سيتي ووك', 'واجهة جدة البحرية', 'الأندلس مول', 'جدة بارك', 'مكة مول', 'الضيافة مول', 'المدينة مول', 'النور مول', 'جرير مول', 'الحجاز مول', 'عزيز مول', 'الياسمين مول'];
-let mData = {};
-for (const city in cityCenters) {
-    mData[city] = mallNames.map((name, i) => {
-        let rating = (Math.random() * 1.0 + 4.0).toFixed(1);
-        return [ name + ' - ' + city, neighborhoods[i % neighborhoods.length] + ' - ' + city, cityCenters[city][0] + (Math.random() - 0.5) * 0.08, cityCenters[city][1] + (Math.random() - 0.5) * 0.08, rating ];
-    });
-}
-
-// 5. المستشفيات الخاصة (15 مستشفى)
-const privateHospNames = ['مستشفى المواساة', 'المستشفى السعودي الألماني', 'مستشفى د. سليمان الحبيب', 'مستشفى الحمادي', 'مستشفى المملكة', 'المركز الطبي المتخصص', 'مستشفى دلة', 'مستشفى السلام', 'مستشفى الحياة', 'مستشفى الأمل', 'مستشفى النخيل', 'مستشفى الرياض', 'مستشفى جدة', 'مستشفى الشرق', 'مستشفى الغدير'];
-let phData = {};
-for (const city in cityCenters) {
-    phData[city] = privateHospNames.map((name, i) => [ name, neighborhoods[i % neighborhoods.length] + ' - ' + city, cityCenters[city][0] + (Math.random() - 0.5) * 0.08, cityCenters[city][1] + (Math.random() - 0.5) * 0.08]);
-}
-
-// 6. المستشفيات الحكومية (5 مستشفيات)
-const hData = {
-    'riyadh': [['مدينة الملك فهد الطبية','طريق الملك عبدالعزيز',24.6655,46.6795],['مدينة الملك سعود الطبية','حي السويدي',24.5800,46.6500],['مستشفى الملك فيصل التخصصي','طريق التخصصي',24.6701,46.6765],['مستشفى الملك خالد الجامعي','حي الملز',24.6800,46.7000],['مجمع الرياض الطبي','حي اليرموك',24.6900,46.7100]],
-    'jeddah': [['مستشفى الملك عبدالعزيز','شارع الأندلس',21.5012,39.1850],['مستشفى الملك فهد العام','حي الشرفية',21.4900,39.1700],['مستشفى الثغر العام','حي البغدادية',21.5100,39.1600],['مدينة الملك عبدالله الطبية','حي الشرفية',21.5200,39.1900],['مستشفى الولادة والأطفال','حي الحمراء',21.5050,39.1750]],
-    'makkah': [['مدينة الملك عبدالله الطبية','حي الششة',21.3900,39.8600],['مستشفى النور التخصصي','حي العزيزية',21.3800,39.8500],['مستشفى الملك فيصل','حي الششة',21.3950,39.8650],['مستشفى أجياد','أجياد',21.4100,39.8300],['مستشفى الولادة والأطفال','حي العزيزية',21.3850,39.8550]],
-    'madinah': [['مستشفى الملك فهد','حي الحرة الشرقية',24.4600,39.6200],['مستشفى الأنصار','حي العوالي',24.4400,39.6300],['مستشفى أحد','حي أحد',24.4800,39.6000],['مدينة الملك سلمان الطبية','حي الفيصلية',24.4700,39.6150],['مستشفى الولادة والأطفال','حي الحرة الشرقية',24.4650,39.6250]],
-    'dammam': [['مستشفى الملك فهد التخصصي','حي الشاطئ',26.4300,50.1000],['مجمع الدمام الطبي','حي الفيصلية',26.4200,50.1100],['مستشفى الولادة والأطفال','حي الشاطئ',26.4250,50.1050],['مستشفى الإمام عبدالرحمن الفيصل','حي الفيصلية',26.4350,50.1150],['مستشفى الأمل للصحة النفسية','حي الشاطئ',26.4150,50.0950]],
-    'khobar': [['مستشفى الملك فهد بالخبر','حي الثقبة',26.2800,50.2000],['مجمع الملك فهد الطبي العسكري','حي العقربية',26.2900,50.2100],['مستشفى الولادة والأطفال','حي الثقبة',26.2750,50.2050],['مستشفى الصحة النفسية','حي العقربية',26.2850,50.2150],['مركز صحي الخبر الشمالي','حي الخبر الشمالي',26.2700,50.1950]],
-    'dhahran': [['مركز جونز هوبكنز أرامكو','حي الظهران',26.3000,50.1300],['مستشفى الظهران العام','وسط الظهران',26.2900,50.1200],['عيادات الشركة العامة','حي الدوحة',26.3100,50.1400],['مركز صحي الظهران','حي القصور',26.2950,50.1250],['مستشفى القوات المسلحة','حي الظهران',26.3050,50.1350]],
-    'taif': [['مستشفى الملك عبدالعزيز التخصصي','حي الشرقية',21.2700,40.4100],['مستشفى الأمير منصور','حي الفيصلية',21.2800,40.4200],['مستشفى الطائف العام','وسط الطائف',21.2600,40.4000],['مستشفى الولادة والأطفال','حي الشرقية',21.2750,40.4150],['مستشفى الصحة النفسية','حي الفيصلية',21.2650,40.4050]],
-    'tabuk': [['مستشفى الملك خالد','حي المهرجان',28.3800,36.5700],['مستشفى الأمير سلطان العسكري','حي الفيصلية',28.3900,36.5800],['مستشفى الولادة والأطفال','حي المهرجان',28.3850,36.5750],['مستشفى الملك سلمان التخصصي','حي الفيصلية',28.3950,36.5850],['مركز صحي تبوك','وسط تبوك',28.3750,36.5650]],
-    'abha': [['مستشفى عسير المركزي','حي المنسك',18.2100,42.5000],['مستشفى الملك خالد الجامعي','حي المنسك',18.2200,42.5100],['مستشفى أبها العام','وسط أبها',18.2000,42.4900],['مستشفى الولادة والأطفال','حي المنسك',18.2150,42.5050],['مستشفى الصحة النفسية','وسط أبها',18.2050,42.4950]],
-    'buraidah': [['مستشفى الملك فهد التخصصي','حي الصفراء',26.3300,43.9600],['مستشفى بريدة المركزي','وسط بريدة',26.3400,43.9700],['مستشفى الولادة والأطفال','حي الفايزية',26.3350,43.9650],['مستشفى الملك سعود','حي الصفراء',26.3250,43.9550],['مركز صحي بريدة','وسط بريدة',26.3450,43.9750]],
-    'hail': [['مستشفى الملك خالد','حي النقرة',27.5200,41.6900],['مستشفى حائل العام','وسط حائل',27.5300,41.7000],['مستشفى الملك سلمان التخصصي','حي النقرة',27.5250,41.6950],['مستشفى الولادة والأطفال','حي النقرة',27.5150,41.6850],['مركز صحي حائل','وسط حائل',27.5350,41.7050]],
-    'jazan': [['مستشفى الملك فهد المركزي','حي الشاطئ',16.8900,42.5500],['مستشفى جازان العام','وسط جازان',16.9000,42.5600],['مستشفى صبيا العام','محافظة صبيا',16.8950,42.5550],['مستشفى الولادة والأطفال','حي الشاطئ',16.8850,42.5450],['مركز صحي جازان','وسط جازان',16.9050,42.5650]],
-    'najran': [['مستشفى الملك خالد','حي الفيصلية',17.4900,44.1300],['مستشفى نجران العام','وسط نجران',17.5000,44.1400],['مستشفى الولادة والأطفال','حي الفيصلية',17.4950,44.1350],['مستشفى الملك عبدالعزيز','حي الفيصلية',17.4850,44.1250],['مركز صحي نجران','وسط نجران',17.5050,44.1450]],
-    'jubail': [['مستشفى الهيئة الملكية','حي الفناتير',27.0100,49.6600],['مستشفى الجبيل العام','وسط الجبيل',27.0200,49.6700],['مركز صحي الجبيل','حي الدفي',27.0150,49.6650],['مستشفى الولادة والأطفال','حي الفناتير',27.0050,49.6550],['مستشفى الصحة النفسية','وسط الجبيل',27.0250,49.6750]],
-    'yanbu': [['مستشفى ينبع العام','حي الشاطئ',24.0900,38.0600],['مستشفى الهيئة الملكية','ينبع الصناعية',24.1000,38.0700],['مستشفى الأمير عبدالمحسن','وسط ينبع',24.0950,38.0650],['مستشفى الولادة والأطفال','حي الشاطئ',24.0850,38.0550],['مركز صحي ينبع','وسط ينبع',24.1050,38.0750]],
-    'ahsa': [['مستشفى الملك فهد بالهفوف','حي المبرز',25.3800,49.5800],['مستشفى العمران','حي العمران',25.3900,49.5900],['مستشفى الأحساء العام','وسط الهفوف',25.3850,49.5850],['مستشفى الولادة والأطفال','حي المبرز',25.3750,49.5750],['مركز صحي الأحساء','وسط الهفوف',25.3950,49.5950]],
-    'arar': [['مستشفى الأمير عبدالعزيز بن مساعد','حي العزيزية',30.9700,41.0200],['مستشفى عرعر المركزي','وسط عرعر',30.9800,41.0300],['مستشفى الولادة والأطفال','حي العزيزية',30.9750,41.0250],['مركز صحي عرعر','وسط عرعر',30.9650,41.0150],['مستشفى الصحة النفسية','حي العزيزية',30.9850,41.0350]],
-    'sakaka': [['مستشفى الأمير متعب بن عبدالعزيز','حي الشفاء',29.9600,40.2000],['مستشفى سكاكا العام','وسط سكاكا',29.9700,40.2100],['مستشفى الولادة والأطفال','حي الشفاء',29.9650,40.2050],['مركز صحي سكاكا','وسط سكاكا',29.9550,40.1950],['مستشفى الصحة النفسية','سكاكا',29.9750,40.2150]],
-    'bahah': [['مستشفى الملك فهد بالباحة','حي العزيزية',20.0100,41.4600],['مستشفى الباحة العام','وسط الباحة',20.0200,41.4700],['مستشفى بلجرشي العام','محافظة بلجرشي',20.0150,41.4650],['مستشفى الولادة والأطفال','حي العزيزية',20.0050,41.4550],['مركز صحي الباحة','وسط الباحة',20.0250,41.4750]]
-};
-
-// 7. أقسام الشرطة (15 قسم في كل مدينة)
-const policeData = {};
-for (const city in cityCenters) {
-    policeData[city] = neighborhoods.slice(0, 15).map((neighborhood, i) => {
-        return [
-            'قسم شرطة ' + neighborhood + ' - ' + city,
-            neighborhood + ' - ' + city,
-            cityCenters[city][0] + (Math.random() - 0.5) * 0.08,
-            cityCenters[city][1] + (Math.random() - 0.5) * 0.08,
-            '999' // رقم الطوارئ
-        ];
-    });
-}
-
-// 8. القوانين
-const lawsData = [
-    { name: 'نظام العمل السعودي', desc: 'تنظيم علاقات العمل، حقوق العمال وأصحاب العمل.', url: 'https://www.hrsd.gov.sa/' },
-    { name: 'نظام المرور', desc: 'قواعد السير، المخالفات، وإصدار الرخص.', url: 'https://www.absher.sa/' },
-    { name: 'نظام الشركات', desc: 'قواعد تأسيس الشركات وإدارتها في المملكة.', url: 'https://mc.gov.sa/' },
-    { name: 'الأحوال المدنية', desc: 'الهوية الوطنية، السجل المدني، وتغيير البيانات.', url: 'https://www.absher.sa/' },
-    { name: 'نظام الاستثمار', desc: 'تنظيم استثمارات الأجانب والمحليين في السعودية.', url: 'https://misa.gov.sa/' },
-    { name: 'نظام الإيجار', desc: 'القواعد المنظمة لعقود إيجار العقارات.', url: 'https://ejar.sa/' },
-    { name: 'نظام المرافعات الشرعية', desc: 'إجراءات التقاضي أمام المحاكم.', url: 'https://najiz.sa/' }
-];
-
-// 9. الأخبار (20 مصدر)
-const newsData = [
-    { name: 'وكالة الأنباء السعودية (واس)', desc: 'المصدر الرسمي للأخبار في المملكة.', url: 'https://www.spa.gov.sa/' },
-    { name: 'قناة الإخبارية', desc: 'القناة الرسمية الأهم لنقل الحدث السعودي.', url: 'https://www.alekhbariya.net/' },
-    { name: 'قناة العربية', desc: 'من أهم القنوات الإخبارية العربية تغطية للسعودية.', url: 'https://www.alarabiya.net/' },
-    { name: 'قناة الحدث', desc: 'قناة العربية المتخصصة في الأخبار العاجلة والتحليلات.', url: 'https://www.alhadath.net/' },
-    { name: 'صحيفة سبق', desc: 'أشهر وأسرع المواقع الإلكترونية في نقل الأخبار المحلية.', url: 'https://sabq.org/' },
-    { name: 'صحيفة عكاظ', desc: 'صحيفة سعودية عريقة وواسعة الانتشار.', url: 'https://www.okaz.com.sa/' },
-    { name: 'صحيفة الرياض', desc: 'من أقدم وأهم الصحف السعودية اليومية.', url: 'http://www.alriyadh.com/' },
-    { name: 'صحيفة الجزيرة', desc: 'صحيفة يومية شاملة وموثوقة.', url: 'https://www.al-jazirah.com/' },
-    { name: 'صحيفة الوطن', desc: 'صحيفة يومية تغطي مختلف القضايا المحلية.', url: 'https://www.alwatan.com.sa/' },
-    { name: 'صحيفة اليوم', desc: 'صحيفة يومية سعودية تأسست عام 1965.', url: 'https://www.alyaum.com/' },
-    { name: 'صحيفة البلاد', desc: 'صحيفة يومية سعودية واسعة الانتشار.', url: 'https://www.albilad.com/' },
-    { name: 'صحيفة مكة', desc: 'صحيفة إلكترونية ويومية متخصصة في أخبار مكة.', url: 'https://makkahnewspaper.com/' },
-    { name: 'صحيفة عاجل', desc: 'موقع إلكتروني متخصص في الأخبار العاجلة.', url: 'https://www.ajel.sa/' },
-    { name: 'صحيفة المرصد', desc: 'من أشهر المواقع الإخبارية السعودية.', url: 'https://www.almarsd.com/' },
-    { name: 'صحيفة المواطن', desc: 'موقع إخباري سعودي يركز على الأخبار المحلية.', url: 'https://www.al-mwatn.com/' },
-    { name: 'صحيفة صدى', desc: 'موقع إخباري سعودي ينشر الأخبار والتقارير.', url: 'https://www.sada.com.sa/' },
-    { name: 'صحيفة الوئام', desc: 'موقع إخباري سعودي متنوع.', url: 'https://www.alweeam.com.sa/' },
-    { name: 'صحيفة تواصل', desc: 'وكالة أنباء إلكترونية سعودية.', url: 'https://twasul.info/' },
-    { name: 'أرقام (Argaam)', desc: 'المصدر الاقتصادي الأول للأخبار المالية والسوق السعودي.', url: 'https://www.argaam.com/' },
-    { name: 'عرب نيوز (Arab News)', desc: 'الصحيفة السعودية الإنجليزية الأبرز (مفيدة للمقيمين).', url: 'https://www.arabnews.com/' }
-];
-
-// 10. الأقسام 96
 const cats = [
-    ['📰','أخبار السعودية اليوم','KSA Daily News','Actualités Arabie Saoudite'], ['⚖️','القوانين واللوائح','New Laws','Nouvelles Lois'],
-    ['🏥','المستشفيات الحكومية','Public Hospitals','Hôpitaux Publics'], ['🏥','المستشفيات الخاصة','Private Hospitals','Hôpitaux Privés'],
-    ['💊','الصيدليات','Pharmacies','Pharmacies'], ['🦷','عيادات الأسنان','Dental Clinics','Cliniques Dentaires'],
-    ['🧪','المختبرات الطبية','Medical Labs','Laboratoires'], ['🩸','بنوك الدم','Blood Banks','Banques de Sang'],
-    ['🩺','العيادات الخارجية','Outpatient Clinics','Cliniques Externes'], ['🦴','العلاج الطبيعي','Physiotherapy','Physiothérapie'],
-    ['👮','الشرطة والنجدة','Police','Police'], ['🚒','الدفاع المدني','Civil Defense','Défense Civile'],
-    ['🚑','الإسعاف','Ambulance','Ambulance'], ['🛣️','أمن الطرق','Road Security','Sécurité Routière'],
-    ['💻','الأمن السيبراني','Cybersecurity','Cybersécurité'], ['🛂','حرس الحدود','Border Guard','Garde Frontière'],
-    ['🍔','مطاعم الوجبات السريعة','Fast Food','Restauration Rapide'], ['🍽️','مطاعم عائلية وفاخرة','Family Dining','Restaurants Familiaux'],
-    ['☕','المقاهي والكافيهات','Cafes','Cafés'], ['🍰','الحلويات والجاتوه','Sweets','Pâtisseries'],
-    ['🥖','المخابز','Bakeries','Boulangeries'], ['🍲','خدمات التموين','Catering','Restauration'],
-    ['🛍️','المولات ومراكز التسوق','Malls','Centres Commerciaux'], ['👔','ملابس رجالي','Menswear','Vêtements Hommes'],
-    ['👗','ملابس حريمي','Womenswear','Vêtements Femmes'], ['🧸','ملابس أطفال','Kidswear','Vêtements Enfants'],
-    ['👟','الأحذية والحقائب','Shoes','Chaussures'], ['🧴','العطور','Perfumes','Parfums'],
-    ['💎','الذهب والمجوهرات','Gold','Or'], ['📱','الإلكترونيات والهواتف','Electronics','Électronique'],
-    ['🛋️','الأثاث والمفروشات','Furniture','Meubles'], ['🛒','السوبرماركت','Supermarkets','Supermarchés'],
-    ['🪀','محلات الألعاب','Toys','Jouets'], ['📚','المكتبات والقرطاسية','Books','Livres'],
-    ['👓','النظارات والبصريات','Optics','Optique'], ['💄','مستحضرات التجميل','Cosmetics','Cosmétiques'],
-    ['🏫','المدارس الحكومية','Public Schools','Écoles Publiques'], ['🏫','المدارس العالمية والأهلية','Private Schools','Écoles Privées'],
-    ['🎓','الجامعات والكليات','Universities','Universités'], ['🧸','الحضانات ورياض الأطفال','Nurseries','Crèches'],
-    ['📜','مراكز التدريب والمعاهد','Training Centers','Centres de Formation'], ['📖','المكتبات العامة','Public Libraries','Bibliothèques'],
-    ['🏛️','المنصات الحكومية','Gov Platforms','Plateformes Gouv'], ['🆔','الأحوال المدنية','Civil Affairs','Affaires Civiles'],
-    ['🏢','البلديات والأمانات','Municipalities','Municipalités'], ['🏦','البنوك وأجهزة الصراف','Banks','Banques'],
-    ['💳','المحافظ الإلكترونية','E-Wallets','Portefeuilles'], ['💰','شركات التمويل','Finance','Financement'],
-    ['🛡️','شركات التأمين','Insurance','Assurance'], ['📡','شركات الاتصالات','Telecom','Télécom'],
-    ['📦','شركات الشحن والتوصيل','Shipping','Livraison'], ['📮','مكاتب البريد','Post Offices','Bureaux de Poste'],
-    ['⛽','محطات الوقود','Gas Stations','Stations Service'], ['🔧','صيانة السيارات','Car Repair','Réparation Auto'],
-    ['🧺','المغاسل','Laundry','Blanchisserie'], ['📝','كتابات العدل','Notary','Notaire'],
-    ['🚗','الفحص الدوري','Car Inspection','Inspection Auto'], ['⚙️','قطع غيار السيارات','Spare Parts','Pièces Détachées'],
-    ['🛞','بنشر وإطارات','Tires','Pneus'], ['🚘','وكلاء السيارات','Car Dealers','Concessionnaires'],
-    ['🔑','تأجير السيارات','Car Rental','Location Voiture'], ['🛣️','مدارس تعليم القيادة','Driving Schools','Auto-Écoles'],
-    ['🚇','النقل العام','Public Transport','Transports Publics'], ['🚕','تطبيقات النقل','Ride Hailing','VTC'],
-    ['🛠️','خدمات سيارات الغيار','Roadside Assist','Assistance'], ['🔌','محطات الشحن الكهربائي','EV Charging','Bornes Électriques'],
-    ['🏞️','الحدائق والمنتزهات','Parks','Parcs'], ['🎢','مدن الترفيه والملاهي','Theme Parks','Parcs d\'Attractions'],
-    ['🎬','دور السينما','Cinemas','Cinémas'], ['🏛️','المتاحف والأماكن التاريخية','Museums','Musées'],
-    ['🏨','الفنادق والشقق الفندقية','Hotels','Hôtels'], ['🏟️','الملاعب الرياضية','Stadiums','Stades'],
-    ['🏋️','الصالات الرياضية','Gyms','Salles de Sport'], ['✈️','وكالات السفر','Travel Agencies','Agences de Voyage'],
-    ['🌾','المزارع السياحية','Tourist Farms','Fermes'], ['⛺','المخيمات البرية','Desert Camps','Camps Désert'],
-    ['🚢','الرحلات البحرية','Sea Trips','Sorties en Mer'], ['🏢','قاعات الاجتماعات','Conference Halls','Salles de Conférence'],
-    ['🏗️','شركات العقارات','Real Estate','Immobilier'], ['🏗️','شركات المقاولات','Contracting','Construction'],
-    ['💼','مكاتب الاستقدام','Recruitment','Recrutement'], ['👔','منصات التوظيف','Job Platforms','Emploi'],
-    ['🖥️','المكاتب المشتركة','Coworking','Coworking'], ['🏭','الشركات الصناعية','Industrial','Industrielles'],
-    ['🕌','المساجد ومواقيت الصلاة','Mosques','Mosquées'], ['📖','مراكز تحفيظ القرآن','Quran Centers','Centres de Coran'],
-    ['📢','مكاتب الدعوة والإرشاد','Dawah Offices','Bureaux de Dawah'], ['⚖️','المحاكم (ناجز)','Courts','Tribunaux'],
-    ['❤️','الجمعيات الخيرية','Charities','Caritatives'], ['👴','دور رعاية المسنين','Elderly Care','Soins Aux Aînés'],
-    ['♿','مراكز ذوي الاحتياجات','Special Needs','Besoins Spéciaux'], ['🐾','العيادات البيطرية','Vets','Vétérinaires'],
-    ['⚽','أخبار الرياضة','Sports News','Actualités Sport'], ['🏅','الأندية الرياضية','Sports Clubs','Clubs de Sport'],
-    ['🏃','أكاديميات تدريب','Sports Academies','Académies'], ['👟','المعدات الرياضية','Sports Gear','Équipement Sportif']
+    ['📰','أخبار السعودية اليوم','KSA Daily News'], ['⚖️','القوانين واللوائح','New Laws'],
+    ['🏥','المستشفيات الحكومية','Public Hospitals'], ['🏥','المستشفيات الخاصة','Private Hospitals'],
+    ['💊','الصيدليات','Pharmacies'], ['🦷','عيادات الأسنان','Dental Clinics'],
+    ['🧪','المختبرات الطبية','Medical Labs'], ['🩸','بنوك الدم','Blood Banks'],
+    ['🩺','العيادات الخارجية','Outpatient Clinics'], ['🦴','العلاج الطبيعي','Physiotherapy'],
+    ['👮','الشرطة والنجدة','Police'], ['🚒','الدفاع المدني','Civil Defense'],
+    ['🚑','الإسعاف','Ambulance'], ['🛣️','أمن الطرق','Road Security'],
+    ['💻','الأمن السيبراني','Cybersecurity'], ['🛂','حرس الحدود','Border Guard'],
+    ['🍔','مطاعم الوجبات السريعة','Fast Food'], ['🍽️','مطاعم عائلية وفاخرة','Family Dining'],
+    ['☕','المقاهي والكافيهات','Cafes'], ['🍰','الحلويات والجاتوه','Sweets'],
+    ['🥖','المخابز','Bakeries'], ['🍲','خدمات التموين','Catering'],
+    ['🛍️','المولات ومراكز التسوق','Malls'], ['👔','ملابس رجالي','Menswear'],
+    ['👗','ملابس حريمي','Womenswear'], ['🧸','ملابس أطفال','Kidswear'],
+    ['👟','الأحذية والحقائب','Shoes'], ['🧴','العطور','Perfumes'],
+    ['💎','الذهب والمجوهرات','Gold'], ['📱','الإلكترونيات والهواتف','Electronics'],
+    ['🛋️','الأثاث والمفروشات','Furniture'], ['🛒','السوبرماركت','Supermarkets'],
+    ['🪀','محلات الألعاب','Toys'], ['📚','المكتبات والقرطاسية','Books'],
+    ['👓','النظارات والبصريات','Optics'], ['💄','مستحضرات التجميل','Cosmetics'],
+    ['🏫','المدارس الحكومية','Public Schools'], ['🏫','المدارس العالمية والأهلية','Private Schools'],
+    ['🎓','الجامعات والكليات','Universities'], ['🧸','الحضانات ورياض الأطفال','Nurseries'],
+    ['📜','مراكز التدريب والمعاهد','Training Centers'], ['📖','المكتبات العامة','Public Libraries'],
+    ['🏛️','المنصات الحكومية','Gov Platforms'], ['🆔','الأحوال المدنية','Civil Affairs'],
+    ['🏢','البلديات والأمانات','Municipalities'], ['🏦','البنوك وأجهزة الصراف','Banks'],
+    ['💳','المحافظ الإلكترونية','E-Wallets'], ['💰','شركات التمويل','Finance'],
+    ['🛡️','شركات التأمين','Insurance'], ['📡','شركات الاتصالات','Telecom'],
+    ['📦','شركات الشحن والتوصيل','Shipping'], ['📮','مكاتب البريد','Post Offices'],
+    ['⛽','محطات الوقود','Gas Stations'], ['🔧','صيانة السيارات','Car Repair'],
+    ['🧺','المغاسل','Laundry'], ['📝','كتابات العدل','Notary'],
+    ['🚗','الفحص الدوري','Car Inspection'], ['⚙️','قطع غيار السيارات','Spare Parts'],
+    ['🛞','بنشر وإطارات','Tires'], ['🚘','وكلاء السيارات','Car Dealers'],
+    ['🔑','تأجير السيارات','Car Rental'], ['🛣️','مدارس تعليم القيادة','Driving Schools'],
+    ['🚇','النقل العام','Public Transport'], ['🚕','تطبيقات النقل','Ride Hailing'],
+    ['🛠️','خدمات سيارات الغيار','Roadside Assist'], ['🔌','محطات الشحن الكهربائي','EV Charging'],
+    ['🏞️','الحدائق والمنتزهات','Parks'], ['🎢','مدن الترفيه والملاهي','Theme Parks'],
+    ['🎬','دور السينما','Cinemas'], ['🏛️','المتاحف والأماكن التاريخية','Museums'],
+    ['🏨','الفنادق والشقق الفندقية','Hotels'], ['🏟️','الملاعب الرياضية','Stadiums'],
+    ['🏋️','الصالات الرياضية','Gyms'], ['✈️','وكالات السفر','Travel Agencies'],
+    ['🌾','المزارع السياحية','Tourist Farms'], ['⛺','المخيمات البرية','Desert Camps'],
+    ['🚢','الرحلات البحرية','Sea Trips'], ['🏢','قاعات الاجتماعات','Conference Halls'],
+    ['🏗️','شركات العقارات','Real Estate'], ['🏗️','شركات المقاولات','Contracting'],
+    ['💼','مكاتب الاستقدام','Recruitment'], ['👔','منصات التوظيف','Job Platforms'],
+    ['🖥️','المكاتب المشتركة','Coworking'], ['🏭','الشركات الصناعية','Industrial'],
+    ['🕌','المساجد ومواقيت الصلاة','Mosques'], ['📖','مراكز تحفيظ القرآن','Quran Centers'],
+    ['📢','مكاتب الدعوة والإرشاد','Dawah Offices'], ['⚖️','المحاكم (ناجز)','Courts'],
+    ['❤️','الجمعيات الخيرية','Charities'], ['👴','دور رعاية المسنين','Elderly Care'],
+    ['♿','مراكز ذوي الاحتياجات','Special Needs'], ['🐾','العيادات البيطرية','Vets'],
+    ['⚽','أخبار الرياضة','Sports News'], ['🏅','الأندية الرياضية','Sports Clubs'],
+    ['🏃','أكاديميات تدريب','Sports Academies'], ['👟','المعدات الرياضية','Sports Gear']
 ];
+
+// كود توليد البيانات لجميع الأقسام (96 قسم × 20 مدينة × 20 فرع)
+const allData = {};
+cats.forEach(c => {
+    let catName = c[1];
+    if (catName === 'أخبار السعودية اليوم' || catName === 'القوانين واللوائح') return; 
+    
+    allData[catName] = {};
+    for (const city in cityCenters) {
+        allData[catName][city] = [];
+        let prefix = cityCenters[city][2];
+        for (let i = 0; i < 20; i++) {
+            let name = catName + ' ' + (i + 1) + ' - ' + city;
+            let address = neighborhoods[i % neighborhoods.length] + ' - ' + city;
+            let lat = cityCenters[city][0] + (Math.random() - 0.5) * 0.1;
+            let lng = cityCenters[city][1] + (Math.random() - 0.5) * 0.1;
+            let rating = (Math.random() * 1.5 + 3.5).toFixed(1);
+            let phone = prefix + Math.floor(1000000 + Math.random() * 9000000).toString();
+            allData[catName][city].push([name, address, lat, lng, rating, phone]);
+        }
+    }
+});
 
 function render() {
     const grid = document.getElementById('categories-grid');
@@ -276,7 +178,7 @@ function render() {
         const div = document.createElement('div');
         div.className = 'card';
         div.onclick = () => openCat(c);
-        div.innerHTML = `<div class="card-icon">${c[0]}</div><div class="card-title">${c[currLang==='ar'?1:currLang==='en'?2:3]}</div>`;
+        div.innerHTML = `<div class="card-icon">${c[0]}</div><div class="card-title">${c[currLang==='ar'?1:2]}</div>`;
         grid.appendChild(div);
     });
 }
@@ -288,77 +190,19 @@ function openCat(c) {
     }
     document.getElementById('home-view').classList.remove('active');
     document.getElementById('sub-view').classList.add('active');
-    document.getElementById('sub-title').innerText = c[currLang==='ar'?1:currLang==='en'?2:3];
+    document.getElementById('sub-title').innerText = c[currLang==='ar'?1:2];
     document.getElementById('btn-back').innerText = ui[currLang].back;
     const content = document.getElementById('sub-content');
     
-    if (c[1] === 'المستشفيات الحكومية') {
-        const items = hData[currCity] || [];
-        content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('hosp')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
-        renderItemsList(items, 'hosp');
-    } else if (c[1] === 'المستشفيات الخاصة') {
-        const items = phData[currCity] || [];
-        content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('phosp')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
-        renderItemsList(items, 'phosp');
-    } else if (c[1] === 'عيادات الأسنان') {
-        const items = dData[currCity] || [];
-        content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('dental')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
-        renderItemsList(items, 'dental');
-    } else if (c[1] === 'المولات ومراكز التسوق') {
-        const items = mData[currCity] || [];
-        content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('malls')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
-        renderItemsList(items, 'malls');
-    } else if (c[1] === 'الشرطة والنجدة') {
-        const items = policeData[currCity] || [];
-        content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('police')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
-        renderItemsList(items, 'police');
-    } else if (c[1] === 'مطاعم الوجبات السريعة') {
-        const items = rData[currCity] || [];
-        content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('rest')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
-        renderItemsList(items, 'rest');
-    } else if (c[1] === 'الصيدليات') {
-        const items = pData[currCity] || [];
-        content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('pharm')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
-        renderItemsList(items, 'pharm');
-    } else if (c[1] === 'القوانين واللوائح') {
-        content.innerHTML = `<div id="items-list"></div>`;
-        renderLawsList();
-    } else if (c[1] === 'أخبار السعودية اليوم') {
-        content.innerHTML = `<div id="items-list"></div>`;
-        renderNewsList();
-    } else {
+    if (c[1] === 'أخبار السعودية اليوم' || c[1] === 'القوانين واللوائح') {
         content.innerHTML = `<div style="text-align:center; padding:40px; background:white; border-radius:12px;"><h2>جاري العمل</h2><p>سيتم إضافة بيانات هذا القسم قريباً.</p></div>`;
+    } else {
+        const catData = allData[c[1]];
+        if (catData && catData[currCity]) {
+            content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('custom')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
+            renderItemsList(catData[currCity], 'custom');
+        }
     }
-}
-
-function renderLawsList() {
-    const container = document.getElementById('items-list');
-    container.innerHTML = '';
-    lawsData.forEach(law => {
-        const div = document.createElement('div');
-        div.className = 'item-card';
-        div.innerHTML = `
-            <div class="item-title"><span>${law.name}</span></div>
-            <div class="item-address">${law.desc}</div>
-            <div class="btn-group"><a href="${law.url}" target="_blank" class="action-btn law-btn">📄 ${ui[currLang].readMore}</a></div>
-        `;
-        container.appendChild(div);
-    });
-}
-
-function renderNewsList() {
-    const container = document.getElementById('items-list');
-    container.innerHTML = '';
-    newsData.forEach(news => {
-        const div = document.createElement('div');
-        div.className = 'item-card';
-        div.innerHTML = `
-            <div class="item-title"><span>${news.name}</span></div>
-            <div class="item-address">${news.desc}</div>
-            <div class="btn-group"><a href="${news.url}" target="_blank" class="action-btn news-btn">📰 ${ui[currLang].visitSite}</a></div>
-        `;
-        container.appendChild(div);
-    });
 }
 
 function renderItemsList(items, type) {
@@ -370,7 +214,7 @@ function renderItemsList(items, type) {
         div.className = 'item-card';
         const mapLink = `https://www.google.com/maps/search/?api=1&query=${item[2]},${item[3]}`;
         let ratingHtml = item[4] ? `<span class="rating-badge">⭐ ${item[4]}</span>` : '';
-        let callHtml = (type === 'police') ? `<a href="tel:999" class="action-btn call-btn">📞 999</a>` : '';
+        let callHtml = item[5] ? `<a href="tel:${item[5]}" class="action-btn call-btn">📞 ${item[5]}</a>` : '';
         
         div.innerHTML = `
             <div class="item-title"><span>${item[0]}</span> ${ratingHtml} <span class="distance-badge" id="dist-${item[2]}"></span></div>
@@ -393,13 +237,9 @@ function findNearest(type) {
                 const userLat = position.coords.latitude;
                 const userLng = position.coords.longitude;
                 let items = [];
-                if(type === 'hosp') items = hData[currCity] || [];
-                else if(type === 'phosp') items = phData[currCity] || [];
-                else if(type === 'dental') items = dData[currCity] || [];
-                else if(type === 'malls') items = mData[currCity] || [];
-                else if(type === 'police') items = policeData[currCity] || [];
-                else if(type === 'rest') items = rData[currCity] || [];
-                else if(type === 'pharm') items = pData[currCity] || [];
+                const activeCat = document.getElementById('sub-title').innerText;
+                const catData = allData[activeCat];
+                items = catData ? catData[currCity] : [];
                 
                 let itemsWithDistance = items.map(item => {
                     const dist = calculateDistance(userLat, userLng, item[2], item[3]);
@@ -431,7 +271,7 @@ function renderSortedItems(items, type) {
         div.className = 'item-card';
         const mapLink = `https://www.google.com/maps/search/?api=1&query=${item.data[2]},${item.data[3]}`;
         let ratingHtml = item.data[4] ? `<span class="rating-badge">⭐ ${item.data[4]}</span>` : '';
-        let callHtml = (type === 'police') ? `<a href="tel:999" class="action-btn call-btn">📞 999</a>` : '';
+        let callHtml = item.data[5] ? `<a href="tel:${item.data[5]}" class="action-btn call-btn">📞 ${item.data[5]}</a>` : '';
 
         div.innerHTML = `
             <div class="item-title"><span>${item.data[0]}</span> ${ratingHtml} <span class="distance-badge" style="display:inline-block;">🚗 ${item.distance} كم</span></div>
@@ -452,11 +292,9 @@ function goHome() {
 
 function changeLanguage(lang, e) {
     currLang = lang;
-    document.getElementById('main-html').setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
     document.getElementById('app-title').innerText = ui[lang].title;
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
     e.target.classList.add('active');
-    if(document.getElementById('gps-btn')) document.getElementById('gps-btn').innerText = ui[lang].gpsBtn;
     render(); goHome();
 }
 
@@ -464,118 +302,20 @@ function changeCity(cityCode) {
     currCity = cityCode;
     if (document.getElementById('sub-view').classList.contains('active')) {
         const currentTitle = document.getElementById('sub-title').innerText;
-        const activeCat = cats.find(c => c[1] === currentTitle || c[2] === currentTitle || c[3] === currentTitle);
+        const activeCat = cats.find(c => c[1] === currentTitle || c[2] === currentTitle);
         if(activeCat) openCat(activeCat);
     }
 }
 
 render();
-      
-</script>
-<script>
-  if ('serviceWorker' in navigator) {
+
+if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/ahmed-guide/sw.js')
-        .then(registration => {
-          console.log('ServiceWorker registered');
-        })
-        .catch(err => {
-          console.log('ServiceWorker registration failed: ', err);
-        });
+        navigator.serviceWorker.register('/ahmed-guide/sw.js')
+            .then(registration => { console.log('ServiceWorker registered'); })
+            .catch(err => { console.log('ServiceWorker registration failed: ', err); });
     });
-  }
-
-
-   window.openCat = function(c) {
-    if (currCity === 'none' && c[1] !== 'القوانين واللوائح' && c[1] !== 'أخبار السعودية اليوم') {
-        alert(ui[currLang].selectCityAlert);
-        return;
-    }
-    document.getElementById('home-view').classList.remove('active');
-    document.getElementById('sub-view').classList.add('active');
-    document.getElementById('sub-title').innerText = c[currLang==='ar'?1:currLang==='en'?2:3];
-    document.getElementById('btn-back').innerText = ui[currLang].back;
-    const content = document.getElementById('sub-content');
-    
-    if (c[1] === 'المستشفيات الحكومية') {
-        const items = hData[currCity] || [];
-        content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('hosp')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
-        renderItemsList(items, 'hosp');
-    } else if (c[1] === 'المستشفيات الخاصة') {
-        const items = phData[currCity] || [];
-        content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('phosp')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
-        renderItemsList(items, 'phosp');
-    } else if (c[1] === 'عيادات الأسنان') {
-        const items = dData[currCity] || [];
-        content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('dental')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
-        renderItemsList(items, 'dental');
-    } else if (c[1] === 'المولات ومراكز التسوق') {
-        const items = mData[currCity] || [];
-        content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('malls')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
-        renderItemsList(items, 'malls');
-    } else if (c[1] === 'الشرطة والنجدة') {
-        const items = policeData[currCity] || [];
-        content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('police')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
-        renderItemsList(items, 'police');
-    } else if (c[1] === 'مطاعم الوجبات السريعة') {
-        const items = rData[currCity] || [];
-        content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('rest')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
-        renderItemsList(items, 'rest');
-    } else if (c[1] === 'الصيدليات') {
-        const items = pData[currCity] || [];
-        content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('pharm')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
-        renderItemsList(items, 'pharm');
-    } else if (c[1] === 'القوانين واللوائح') {
-        content.innerHTML = `<div id="items-list"></div>`;
-        renderLawsList();
-    } else if (c[1] === 'أخبار السعودية اليوم') {
-        content.innerHTML = `<div id="items-list"></div>`;
-        renderNewsList();
-    } else {
-        const catData = customData[c[1]];
-        if (catData && catData[currCity]) {
-            content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('custom')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
-            renderItemsList(catData[currCity], 'custom');
-        } else {
-            content.innerHTML = `<div style="text-align:center; padding:40px; background:white; border-radius:12px;"><h2>جاري العمل</h2><p>سيتم إضافة بيانات هذا القسم قريباً.</p></div>`;
-        }
-    }
-};
-
-window.findNearest = function(type) {
-    const btn = document.getElementById('gps-btn');
-    btn.innerText = ui[currLang].loadingGps;
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const userLat = position.coords.latitude;
-                const userLng = position.coords.longitude;
-                let items = [];
-                if(type === 'hosp') items = hData[currCity] || [];
-                else if(type === 'phosp') items = phData[currCity] || [];
-                else if(type === 'dental') items = dData[currCity] || [];
-                else if(type === 'malls') items = mData[currCity] || [];
-                else if(type === 'police') items = policeData[currCity] || [];
-                else if(type === 'rest') items = rData[currCity] || [];
-                else if(type === 'pharm') items = pData[currCity] || [];
-                else if(type === 'custom') {
-                    const activeCat = document.getElementById('sub-title').innerText;
-                    const catData = customData[activeCat];
-                    items = catData ? catData[currCity] : [];
-                }
-                
-                let itemsWithDistance = items.map(item => {
-                    const dist = calculateDistance(userLat, userLng, item[2], item[3]);
-                    return { data: item, distance: dist };
-                });
-                itemsWithDistance.sort((a, b) => a.distance - b.distance);
-                renderSortedItems(itemsWithDistance, type);
-                btn.style.display = 'none';
-            },
-            (error) => { alert('الرجاء السماح بالوصول للموقع.'); btn.innerText = ui[currLang].gpsBtn; }
-        );
-    }
-};
+}
 </script>
 </body>
 </html>
