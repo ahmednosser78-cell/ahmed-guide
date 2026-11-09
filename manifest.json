@@ -1,3 +1,4 @@
+
 {
   "name": "دليل أحمد وعبده الشامل",
   "short_name": "دليل السعودية",
@@ -8,12 +9,12 @@
   "description": "دليل شامل للمدن السعودية",
   "icons": [
     {
-      "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Flag_of_Saudi_Arabia.svg/512px-Flag_of_Saudi_Arabia.svg.png",
+      "src": "https://flagcdn.com/w512/sa.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Flag_of_Saudi_Arabia.svg/512px-Flag_of_Saudi_Arabia.svg.png",
+      "src": "https://flagcdn.com/w512/sa.png",
       "sizes": "512x512",
       "type": "image/png"
     }
