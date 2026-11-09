@@ -470,5 +470,18 @@ function changeCity(cityCode) {
 
 render();
 </script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/ahmed-guide/sw.js')
+        .then(registration => {
+          console.log('ServiceWorker registered');
+        })
+        .catch(err => {
+          console.log('ServiceWorker registration failed: ', err);
+        });
+    });
+  }
+</script>
 </body>
 </html>
