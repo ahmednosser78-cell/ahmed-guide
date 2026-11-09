@@ -470,6 +470,7 @@ function changeCity(cityCode) {
 }
 
 render();
+      
 </script>
 <script>
   if ('serviceWorker' in navigator) {
@@ -483,6 +484,98 @@ render();
         });
     });
   }
+
+
+   window.openCat = function(c) {
+    if (currCity === 'none' && c[1] !== 'القوانين واللوائح' && c[1] !== 'أخبار السعودية اليوم') {
+        alert(ui[currLang].selectCityAlert);
+        return;
+    }
+    document.getElementById('home-view').classList.remove('active');
+    document.getElementById('sub-view').classList.add('active');
+    document.getElementById('sub-title').innerText = c[currLang==='ar'?1:currLang==='en'?2:3];
+    document.getElementById('btn-back').innerText = ui[currLang].back;
+    const content = document.getElementById('sub-content');
+    
+    if (c[1] === 'المستشفيات الحكومية') {
+        const items = hData[currCity] || [];
+        content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('hosp')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
+        renderItemsList(items, 'hosp');
+    } else if (c[1] === 'المستشفيات الخاصة') {
+        const items = phData[currCity] || [];
+        content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('phosp')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
+        renderItemsList(items, 'phosp');
+    } else if (c[1] === 'عيادات الأسنان') {
+        const items = dData[currCity] || [];
+        content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('dental')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
+        renderItemsList(items, 'dental');
+    } else if (c[1] === 'المولات ومراكز التسوق') {
+        const items = mData[currCity] || [];
+        content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('malls')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
+        renderItemsList(items, 'malls');
+    } else if (c[1] === 'الشرطة والنجدة') {
+        const items = policeData[currCity] || [];
+        content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('police')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
+        renderItemsList(items, 'police');
+    } else if (c[1] === 'مطاعم الوجبات السريعة') {
+        const items = rData[currCity] || [];
+        content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('rest')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
+        renderItemsList(items, 'rest');
+    } else if (c[1] === 'الصيدليات') {
+        const items = pData[currCity] || [];
+        content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('pharm')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
+        renderItemsList(items, 'pharm');
+    } else if (c[1] === 'القوانين واللوائح') {
+        content.innerHTML = `<div id="items-list"></div>`;
+        renderLawsList();
+    } else if (c[1] === 'أخبار السعودية اليوم') {
+        content.innerHTML = `<div id="items-list"></div>`;
+        renderNewsList();
+    } else {
+        const catData = customData[c[1]];
+        if (catData && catData[currCity]) {
+            content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('custom')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
+            renderItemsList(catData[currCity], 'custom');
+        } else {
+            content.innerHTML = `<div style="text-align:center; padding:40px; background:white; border-radius:12px;"><h2>جاري العمل</h2><p>سيتم إضافة بيانات هذا القسم قريباً.</p></div>`;
+        }
+    }
+};
+
+window.findNearest = function(type) {
+    const btn = document.getElementById('gps-btn');
+    btn.innerText = ui[currLang].loadingGps;
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const userLat = position.coords.latitude;
+                const userLng = position.coords.longitude;
+                let items = [];
+                if(type === 'hosp') items = hData[currCity] || [];
+                else if(type === 'phosp') items = phData[currCity] || [];
+                else if(type === 'dental') items = dData[currCity] || [];
+                else if(type === 'malls') items = mData[currCity] || [];
+                else if(type === 'police') items = policeData[currCity] || [];
+                else if(type === 'rest') items = rData[currCity] || [];
+                else if(type === 'pharm') items = pData[currCity] || [];
+                else if(type === 'custom') {
+                    const activeCat = document.getElementById('sub-title').innerText;
+                    const catData = customData[activeCat];
+                    items = catData ? catData[currCity] : [];
+                }
+                
+                let itemsWithDistance = items.map(item => {
+                    const dist = calculateDistance(userLat, userLng, item[2], item[3]);
+                    return { data: item, distance: dist };
+                });
+                itemsWithDistance.sort((a, b) => a.distance - b.distance);
+                renderSortedItems(itemsWithDistance, type);
+                btn.style.display = 'none';
+            },
+            (error) => { alert('الرجاء السماح بالوصول للموقع.'); btn.innerText = ui[currLang].gpsBtn; }
+        );
+    }
+};
 </script>
 </body>
 </html>
