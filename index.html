@@ -3,10 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#006C35">
-<link rel="manifest" href="/ahmed-guide/manifest.json">
 <title>دليل السعودية الشامل</title>
 <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
@@ -14,9 +11,6 @@
     .header { background: #006C35; color: white; padding: 10px; text-align: center; position: sticky; top: 0; z-index: 100; }
     .header h1 { font-size: 18px; margin-bottom: 10px; }
     .controls { display: flex; justify-content: space-between; align-items: center; gap: 5px; }
-    .lang-container { display: flex; gap: 3px; }
-    .lang-btn { background: rgba(255,255,255,0.2); border: 1px solid white; color: white; padding: 4px 8px; border-radius: 15px; cursor: pointer; font-size: 12px; }
-    .lang-btn.active { background: white; color: #006C35; font-weight: bold; }
     .city-select { padding: 6px 10px; border-radius: 15px; border: none; background: #fff; color: #006C35; font-weight: bold; font-size: 13px; outline: none; cursor: pointer; max-width: 140px; }
     .container { padding: 15px; display: none; }
     .container.active { display: block; }
@@ -26,8 +20,7 @@
     .card-icon { font-size: 24px; margin-bottom: 5px; }
     .card-title { font-size: 12px; font-weight: bold; color: #2c3e50; }
     .back-btn { background: #006C35; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; margin-bottom: 15px; display: inline-block; }
-    .gps-btn { background: #2980b9; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: bold; width: 100%; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    .gps-btn:hover { background: #2471a3; }
+    .gps-btn { background: #2980b9; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: bold; width: 100%; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 8px; }
     .item-card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-right: 5px solid #006C35; }
     .item-title { font-weight: bold; font-size: 16px; color: #2c3e50; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center;}
     .rating-badge { background: #f1c40f; color: #333; padding: 3px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; }
@@ -41,131 +34,127 @@
 </head>
 <body>
     <div class="header">
-        <h1 id="app-title">دليل أحمد وعبده الشامل</h1>
+        <h1>دليل أحمد وعبده الشامل</h1>
         <div class="controls">
-            <div class="lang-container">
-                <button class="lang-btn active" onclick="changeLanguage('ar', event)">عربي</button>
-                <button class="lang-btn" onclick="changeLanguage('en', event)">EN</button>
-            </div>
             <select class="city-select" id="city-selector" onchange="changeCity(this.value)">
                 <option value="none" selected>حدد مدينتك 📍</option>
-                <option value="riyadh">الرياض</option>
-                <option value="jeddah">جدة</option>
-                <option value="makkah">مكة المكرمة</option>
-                <option value="madinah">المدينة المنورة</option>
-                <option value="dammam">الدمام</option>
-                <option value="khobar">الخبر</option>
-                <option value="dhahran">الظهران</option>
-                <option value="taif">الطائف</option>
-                <option value="tabuk">تبوك</option>
-                <option value="abha">أبها</option>
-                <option value="buraidah">بريدة</option>
-                <option value="hail">حائل</option>
-                <option value="jazan">جيزان</option>
-                <option value="najran">نجران</option>
-                <option value="jubail">الجبيل</option>
-                <option value="yanbu">ينبع</option>
-                <option value="ahsa">الأحساء</option>
-                <option value="arar">عرعر</option>
-                <option value="sakaka">سكاكا</option>
-                <option value="bahah">الباحة</option>
+                <option value="riyadh">الرياض</option><option value="jeddah">جدة</option><option value="makkah">مكة المكرمة</option>
+                <option value="madinah">المدينة المنورة</option><option value="dammam">الدمام</option><option value="khobar">الخبر</option>
+                <option value="dhahran">الظهران</option><option value="taif">الطائف</option><option value="tabuk">تبوك</option>
+                <option value="abha">أبها</option><option value="buraidah">بريدة</option><option value="hail">حائل</option>
+                <option value="jazan">جيزان</option><option value="najran">نجران</option><option value="jubail">الجبيل</option>
+                <option value="yanbu">ينبع</option><option value="ahsa">الأحساء</option><option value="arar">عرعر</option>
+                <option value="sakaka">سكاكا</option><option value="bahah">الباحة</option>
             </select>
         </div>
     </div>
-
-    <div id="home-view" class="container active">
-        <div class="grid-container" id="categories-grid"></div>
-    </div>
-
+    <div id="home-view" class="container active"><div class="grid-container" id="categories-grid"></div></div>
     <div id="sub-view" class="container">
-        <button class="back-btn" onclick="goHome()" id="btn-back">⬅ رجوع للرئيسية</button>
-        <h2 id="sub-title" style="color: #006C35; margin-bottom: 15px; font-size: 20px;"></h2>
+        <button class="back-btn" onclick="goHome()">⬅ رجوع للرئيسية</button>
+        <h2 id="sub-title" style="color: #006C35; margin-bottom: 15px;"></h2>
         <div id="sub-content"></div>
     </div>
-
 <script>
-const ui = {
-    ar: { title: 'دليل السعودية الشامل', back: '⬅ رجوع', map: 'الخريطة', selectCityAlert: 'من فضلك اختر مدينتك من الأول 📍', gpsBtn: '📍 اضغط لمعرفة الأقرب إليك', loadingGps: 'جاري تحديد موقعك...' },
-    en: { title: 'Saudi Guide', back: '⬅ Back', map: 'Map', selectCityAlert: 'Please select your city 📍', gpsBtn: '📍 Click to find nearest', loadingGps: 'Locating...' }
-};
-
-let currLang = 'ar';
 let currCity = 'none';
 
 const cityCenters = {
-    'riyadh': [24.7136, 46.6753, '011'], 'jeddah': [21.4858, 39.1925, '012'], 'makkah': [21.3891, 39.8579, '012'], 'madinah': [24.4672, 39.6111, '014'], 'dammam': [26.4207, 50.0888, '013'], 'khobar': [26.2794, 50.2083, '013'], 'dhahran': [26.2886, 50.1140, '013'], 'taif': [21.2854, 40.4183, '012'], 'tabuk': [28.3835, 36.5662, '014'], 'abha': [18.2164, 42.5053, '017'], 'buraidah': [26.3260, 43.9750, '016'], 'hail': [27.5219, 41.6907, '016'], 'jazan': [16.8892, 42.5511, '017'], 'najran': [17.4917, 44.1322, '017'], 'jubail': [27.0046, 49.6460, '013'], 'yanbu': [24.0895, 38.0618, '014'], 'ahsa': [25.3833, 49.5833, '013'], 'arar': [30.9753, 41.0381, '014'], 'sakaka': [29.9697, 40.2064, '014'], 'bahah': [20.0129, 41.4677, '017']
+    'riyadh': [24.7136, 46.6753], 'jeddah': [21.4858, 39.1925], 'makkah': [21.3891, 39.8579], 'madinah': [24.4672, 39.6111], 'dammam': [26.4207, 50.0888], 'khobar': [26.2794, 50.2083], 'dhahran': [26.2886, 50.1140], 'taif': [21.2854, 40.4183], 'tabuk': [28.3835, 36.5662], 'abha': [18.2164, 42.5053], 'buraidah': [26.3260, 43.9750], 'hail': [27.5219, 41.6907], 'jazan': [16.8892, 42.5511], 'najran': [17.4917, 44.1322], 'jubail': [27.0046, 49.6460], 'yanbu': [24.0895, 38.0618], 'ahsa': [25.3833, 49.5833], 'arar': [30.9753, 41.0381], 'sakaka': [29.9697, 40.2064], 'bahah': [20.0129, 41.4677]
 };
 
 const neighborhoods = ['حي العليا', 'حي الملز', 'حي النخيل', 'حي الروضة', 'حي الشاطئ', 'حي الأندلس', 'حي الفيصلية', 'حي المروج', 'حي الصحافة', 'حي الياسمين', 'حي السويدي', 'حي الشفاء', 'حي العزيزية', 'حي الحمراء', 'حي النزهة', 'حي الغدير', 'حي الورود', 'حي الملقا', 'حي حطين', 'حي القيروان'];
 
-const cats = [
-    ['📰','أخبار السعودية اليوم','KSA Daily News'], ['⚖️','القوانين واللوائح','New Laws'],
-    ['🏥','المستشفيات الحكومية','Public Hospitals'], ['🏥','المستشفيات الخاصة','Private Hospitals'],
-    ['💊','الصيدليات','Pharmacies'], ['🦷','عيادات الأسنان','Dental Clinics'],
-    ['🧪','المختبرات الطبية','Medical Labs'], ['🩸','بنوك الدم','Blood Banks'],
-    ['🩺','العيادات الخارجية','Outpatient Clinics'], ['🦴','العلاج الطبيعي','Physiotherapy'],
-    ['👮','الشرطة والنجدة','Police'], ['🚒','الدفاع المدني','Civil Defense'],
-    ['🚑','الإسعاف','Ambulance'], ['🛣️','أمن الطرق','Road Security'],
-    ['💻','الأمن السيبراني','Cybersecurity'], ['🛂','حرس الحدود','Border Guard'],
-    ['🍔','مطاعم الوجبات السريعة','Fast Food'], ['🍽️','مطاعم عائلية وفاخرة','Family Dining'],
-    ['☕','المقاهي والكافيهات','Cafes'], ['🍰','الحلويات والجاتوه','Sweets'],
-    ['🥖','المخابز','Bakeries'], ['🍲','خدمات التموين','Catering'],
-    ['🛍️','المولات ومراكز التسوق','Malls'], ['👔','ملابس رجالي','Menswear'],
-    ['👗','ملابس حريمي','Womenswear'], ['🧸','ملابس أطفال','Kidswear'],
-    ['👟','الأحذية والحقائب','Shoes'], ['🧴','العطور','Perfumes'],
-    ['💎','الذهب والمجوهرات','Gold'], ['📱','الإلكترونيات والهواتف','Electronics'],
-    ['🛋️','الأثاث والمفروشات','Furniture'], ['🛒','السوبرماركت','Supermarkets'],
-    ['🪀','محلات الألعاب','Toys'], ['📚','المكتبات والقرطاسية','Books'],
-    ['👓','النظارات والبصريات','Optics'], ['💄','مستحضرات التجميل','Cosmetics'],
-    ['🏫','المدارس الحكومية','Public Schools'], ['🏫','المدارس العالمية والأهلية','Private Schools'],
-    ['🎓','الجامعات والكليات','Universities'], ['🧸','الحضانات ورياض الأطفال','Nurseries'],
-    ['📜','مراكز التدريب والمعاهد','Training Centers'], ['📖','المكتبات العامة','Public Libraries'],
-    ['🏛️','المنصات الحكومية','Gov Platforms'], ['🆔','الأحوال المدنية','Civil Affairs'],
-    ['🏢','البلديات والأمانات','Municipalities'], ['🏦','البنوك وأجهزة الصراف','Banks'],
-    ['💳','المحافظ الإلكترونية','E-Wallets'], ['💰','شركات التمويل','Finance'],
-    ['🛡️','شركات التأمين','Insurance'], ['📡','شركات الاتصالات','Telecom'],
-    ['📦','شركات الشحن والتوصيل','Shipping'], ['📮','مكاتب البريد','Post Offices'],
-    ['⛽','محطات الوقود','Gas Stations'], ['🔧','صيانة السيارات','Car Repair'],
-    ['🧺','المغاسل','Laundry'], ['📝','كتابات العدل','Notary'],
-    ['🚗','الفحص الدوري','Car Inspection'], ['⚙️','قطع غيار السيارات','Spare Parts'],
-    ['🛞','بنشر وإطارات','Tires'], ['🚘','وكلاء السيارات','Car Dealers'],
-    ['🔑','تأجير السيارات','Car Rental'], ['🛣️','مدارس تعليم القيادة','Driving Schools'],
-    ['🚇','النقل العام','Public Transport'], ['🚕','تطبيقات النقل','Ride Hailing'],
-    ['🛠️','خدمات سيارات الغيار','Roadside Assist'], ['🔌','محطات الشحن الكهربائي','EV Charging'],
-    ['🏞️','الحدائق والمنتزهات','Parks'], ['🎢','مدن الترفيه والملاهي','Theme Parks'],
-    ['🎬','دور السينما','Cinemas'], ['🏛️','المتاحف والأماكن التاريخية','Museums'],
-    ['🏨','الفنادق والشقق الفندقية','Hotels'], ['🏟️','الملاعب الرياضية','Stadiums'],
-    ['🏋️','الصالات الرياضية','Gyms'], ['✈️','وكالات السفر','Travel Agencies'],
-    ['🌾','المزارع السياحية','Tourist Farms'], ['⛺','المخيمات البرية','Desert Camps'],
-    ['🚢','الرحلات البحرية','Sea Trips'], ['🏢','قاعات الاجتماعات','Conference Halls'],
-    ['🏗️','شركات العقارات','Real Estate'], ['🏗️','شركات المقاولات','Contracting'],
-    ['💼','مكاتب الاستقدام','Recruitment'], ['👔','منصات التوظيف','Job Platforms'],
-    ['🖥️','المكاتب المشتركة','Coworking'], ['🏭','الشركات الصناعية','Industrial'],
-    ['🕌','المساجد ومواقيت الصلاة','Mosques'], ['📖','مراكز تحفيظ القرآن','Quran Centers'],
-    ['📢','مكاتب الدعوة والإرشاد','Dawah Offices'], ['⚖️','المحاكم (ناجز)','Courts'],
-    ['❤️','الجمعيات الخيرية','Charities'], ['👴','دور رعاية المسنين','Elderly Care'],
-    ['♿','مراكز ذوي الاحتياجات','Special Needs'], ['🐾','العيادات البيطرية','Vets'],
-    ['⚽','أخبار الرياضة','Sports News'], ['🏅','الأندية الرياضية','Sports Clubs'],
-    ['🏃','أكاديميات تدريب','Sports Academies'], ['👟','المعدات الرياضية','Sports Gear']
+const emergencyNumbers = {
+    'الشرطة والنجدة': '999', 'الدفاع المدني': '998', 'الإسعاف': '997', 'أمن الطرق': '996', 'حرس الحدود': '994', 'المستشفيات الحكومية': '937'
+};
+
+const allCats = [
+    ['📰','أخبار السعودية اليوم'], ['⚖️','القوانين واللوائح'], ['🏥','المستشفيات الحكومية'], ['🏥','المستشفيات الخاصة'],
+    ['💊','الصيدليات'], ['🦷','عيادات الأسنان'], ['🧪','المختبرات الطبية'], ['🩸','بنوك الدم'], ['🩺','العيادات الخارجية'],
+    ['🦴','العلاج الطبيعي'], ['👮','الشرطة والنجدة'], ['🚒','الدفاع المدني'], ['🚑','الإسعاف'], ['🛣️','أمن الطرق'],
+    ['💻','الأمن السيبراني'], ['🛂','حرس الحدود'], ['🍔','مطاعم'], ['🍽️','مطاعم عائلية وفاخرة'], ['☕','المقاهي'],
+    ['🍰','الحلويات والجاتوه'], ['🥖','المخابز'], ['🍲','خدمات التموين'], ['🛍️','المولات'], ['👔','ملابس رجالي'],
+    ['👗','ملابس حريمي'], ['🧸','ملابس أطفال'], ['👟','الأحذية والحقائب'], ['🧴','العطور'], ['💎','الذهب والمجوهرات'],
+    ['📱','الإلكترونيات والهواتف'], ['🛋️','الأثاث والمفروشات'], ['🛒','السوبرماركت'], ['🪀','محلات الألعاب'], ['📚','المكتبات والقرطاسية'],
+    ['👓','النظارات والبصريات'], ['💄','مستحضرات التجميل'], ['🏫','المدارس الحكومية'], ['🏫','المدارس العالمية'],
+    ['🎓','الجامعات'], ['🧸','الحضانات'], ['📜','مراكز التدريب'], ['📖','المكتبات العامة'], ['🏛️','المنصات الحكومية'],
+    ['🆔','الأحوال المدنية'], ['🏢','البلديات'], ['🏦','البنوك'], ['💳','المحافظ الإلكترونية'], ['💰','شركات التمويل'],
+    ['🛡️','شركات التأمين'], ['📡','شركات الاتصالات'], ['📦','شركات الشحن'], ['📮','مكاتب البريد'], ['⛽','محطات الوقود'],
+    ['🔧','صيانة السيارات'], ['🧺','المغاسل'], ['📝','كتابات العدل'], ['🚗','الفحص الدوري'], ['⚙️','قطع غيار السيارات'],
+    ['🛞','بنشر وإطارات'], ['🚘','وكلاء السيارات'], ['🔑','تأجير السيارات'], ['🛣️','مدارس تعليم القيادة'], ['🚇','النقل العام'],
+    ['🚕','تطبيقات النقل'], ['🛠️','خدمات سيارات الغيار'], ['🔌','محطات الشحن'], ['🏞️','الحدائق والمنتزهات'], ['🎢','مدن الترفيه'],
+    ['🎬','دور السينما'], ['🏛️','المتاحف'], ['🏨','الفنادق'], ['🏟️','الملاعب الرياضية'], ['🏋️','الصالات الرياضية'],
+    ['✈️','وكالات السفر'], ['🌾','المزارع السياحية'], ['⛺','المخيمات البرية'], ['🚢','الرحلات البحرية'], ['🏢','قاعات الاجتماعات'],
+    ['🏗️','شركات العقارات'], ['🏗️','شركات المقاولات'], ['💼','مكاتب الاستقدام'], ['👔','منصات التوظيف'], ['🖥️','المكاتب المشتركة'],
+    ['🏭','الشركات الصناعية'], ['🕌','المساجد'], ['📖','مراكز تحفيظ القرآن'], ['📢','مكاتب الدعوة'], ['⚖️','المحاكم (ناجز)'],
+    ['❤️','الجمعيات الخيرية'], ['👴','دور رعاية المسنين'], ['♿','مراكز ذوي الاحتياجات'], ['🐾','العيادات البيطرية'], ['⚽','أخبار الرياضة'],
+    ['🏅','الأندية الرياضية'], ['🏃','أكاديميات تدريب'], ['👟','المعدات الرياضية']
 ];
 
-// كود توليد البيانات لجميع الأقسام (96 قسم × 20 مدينة × 20 فرع)
+const realBrands = {
+    'المستشفيات الحكومية': ['مستشفى حكومي - وزارة الصحة', 'مدينة طبية - وزارة الصحة', 'مجمع طبي - وزارة الصحة', 'مركز صحي - وزارة الصحة'],
+    'المستشفيات الخاصة': ['مستشفى المواساة', 'المستشفى السعودي الألماني', 'مستشفى د. سليمان الحبيب', 'مستشفى الحمادي', 'مستشفى المملكة', 'مستشفى دلة'],
+    'الصيدليات': ['صيدلية النهدي', 'صيدلية الدواء', 'صيدلية وايتس', 'صيدلية رصاصة', 'صيدلية الجزيرة', 'صيدلية الأمين'],
+    'عيادات الأسنان': ['عيادات أسنان حكومية - وزارة الصحة', 'مجمع عيادات حكومية - وزارة الصحة', 'عيادات أندلسية', 'مركز المرجان', 'مجمع عيادات النخبة'],
+    'المختبرات الطبية': ['مختبر مركزي - وزارة الصحة', 'مختبر البرج', 'مختبرات ألفا', 'مختبرات دلة'],
+    'بنوك الدم': ['بنك دم مركزي - وزارة الصحة', 'بنك دم - مستشفى حكومي - وزارة الصحة', 'بنك دم رئيسي - وزارة الصحة'],
+    'العيادات الخارجية': ['عيادات خارجية - وزارة الصحة', 'عيادات خارجية - مستشفى حكومي', 'عيادات تخصصية - وزارة الصحة'],
+    'العلاج الطبيعي': ['مركز علاج طبيعي - وزارة الصحة', 'مركز تأهيل طبي - وزارة الصحة', 'علاج طبيعي - مستشفى حكومي'],
+    'الشرطة والنجدة': ['شرطة العليا - وزارة الداخلية', 'شرطة الملز - وزارة الداخلية', 'شرطة النخيل - وزارة الداخلية', 'شرطة الروضة - وزارة الداخلية', 'شرطة الشاطئ - وزارة الداخلية'],
+    'الدفاع المدني': ['الدفاع المدني بالعليا - وزارة الداخلية', 'الدفاع المدني بالملز - وزارة الداخلية', 'الدفاع المدني بالنخيل - وزارة الداخلية', 'الدفاع المدني بالروضة - وزارة الداخلية', 'الدفاع المدني بالشاطئ - وزارة الداخلية'],
+    'الإسعاف': ['هلال أحمر - وزارة الصحة', 'مركز إسعاف - وزارة الصحة', 'إسعاف طوارئ - وزارة الصحة'],
+    'أمن الطرق': ['أمن الطرق - وزارة الداخلية', 'دوريات أمن الطرق - وزارة الداخلية'],
+    'حرس الحدود': ['حرس الحدود - وزارة الداخلية', 'قطاع حرس الحدود - وزارة الداخلية'],
+    'المدارس الحكومية': ['مدرسة حكومية - وزارة التعليم', 'مدرسة ابتدائية - وزارة التعليم', 'مدرسة متوسطة - وزارة التعليم', 'مدرسة ثانوية - وزارة التعليم'],
+    'المدارس العالمية': ['مدارس الرياض', 'مدارس المنارات', 'مدارس العالمية', 'مدارس الأندلس'],
+    'الجامعات': ['جامعة حكومية - وزارة التعليم', 'كلية حكومية - وزارة التعليم', 'جامعة الملك سعود - وزارة التعليم'],
+    'الأحوال المدنية': ['أحوال مدنية - وزارة الداخلية', 'مكتب الأحوال المدنية - وزارة الداخلية'],
+    'البلديات': ['بلدية - وزارة الشؤون البلدية', 'أمانة - وزارة الشؤون البلدية', 'مجمع بلدي - وزارة الشؤون البلدية'],
+    'المحاكم (ناجز)': ['محكمة عامة - وزارة العدل', 'محكمة جزائية - وزارة العدل', 'محكمة أحوال شخصية - وزارة العدل', 'كتابة عدل - وزارة العدل'],
+    'المساجد': ['مسجد - وزارة الشؤون الإسلامية', 'جامع - وزارة الشؤون الإسلامية', 'مسجد حي - وزارة الشؤون الإسلامية'],
+    'مراكز تحفيظ القرآن': ['مركز تحفيظ - وزارة الشؤون الإسلامية', 'حلقة تحفيظ - وزارة الشؤون الإسلامية'],
+    'مكاتب الدعوة': ['مكتب دعوة - وزارة الشؤون الإسلامية', 'مكتب إرشاد - وزارة الشؤون الإسلامية'],
+    'الجمعيات الخيرية': ['جمعية خيرية - وزارة الموارد البشرية', 'مؤسسة خيرية - وزارة الموارد البشرية'],
+    'دور رعاية المسنين': ['دار رعاية - وزارة الموارد البشرية', 'مركز إيواء - وزارة الموارد البشرية'],
+    'مراكز ذوي الاحتياجات': ['مركز تأهيل - وزارة الموارد البشرية', 'مركز رعاية - وزارة الموارد البشرية'],
+    'مطاعم': ['البيك', 'هرفي', 'كودو', 'ماكدونالدز', 'شاورمر', 'كنتاكي', 'هارديز', 'برجر كنج', 'جان برجر'],
+    'مطاعم عائلية وفاخرة': ['مطعم النخبة', 'ليالي الشرق', 'مطعم الأصالة', 'دار الزيتون', 'البحر الأحمر', 'مطعم المملكة'],
+    'المقاهي': ['ستاربكس', 'دانكن', 'بارنز', 'د. كيف', 'مافاتيح', 'كودو كافيه', 'نصف كوب'],
+    'المولات': ['الرياض بارك', 'ريد سي مول', 'مول العرب', 'النخيل مول', 'غرناطة مول', 'الفيصلية مول', 'صحارى مول'],
+    'السوبرماركت': ['بنده', 'العثيم', 'كارفور', 'لولو هايبر ماركت', 'التميمي', 'الدريس'],
+    'البنوك': ['مصرف الراجحي', 'البنك الأهلي', 'بنك الرياض', 'بنك ساب', 'البنك الفرنسي', 'بنك البلاد', 'بنك الجزيرة', 'البنك العربي'],
+    'محطات الوقود': ['ساسكو', 'الدريس', 'بترومين', 'نفط', 'محطات المتحدة'],
+    'المخابز': ['مخبز الأصيل', 'مخبز السد', 'مخبز الحرمين', 'مخبز روابي', 'مخبز الريف'],
+    'العطور': ['عطور وعطور', 'العربية للعطور', 'باريس جاليري', 'وجوه', 'ماك'],
+    'المكتبات والقرطاسية': ['مكتبة جرير', 'العثيم', 'القرطاسية الحديثة', 'مكتبة الرياض', 'أقلام'],
+    'النظارات والبصريات': ['بصريات المغربي', 'النظارة', 'عيون', 'فيجن', 'أوبتيكال'],
+    'مستحضرات التجميل': ['فيسز', 'ماك', 'لوريال', 'نون بيوتي', 'عطور وعطور'],
+    'الأندية الرياضية': ['نادي الهلال', 'نادي النصر', 'نادي الاتحاد', 'نادي الأهلي', 'نادي الشباب'],
+    'شركات الاتصالات': ['STC', 'موبايلي', 'زين', 'سلام'],
+    'الفنادق': ['فندق الفيصلية', 'فور سيزونز', 'ريتز كارلتون', 'هيلتون', 'ماريوت'],
+    'شركات الشحن': ['أرامكس', 'سمسا', 'DHL', 'فيدكس', 'سبل'],
+    'الصالات الرياضية': ['فتنس تايم', 'جولدز جيم', 'لياقة بلس', 'بودي ماستر'],
+    'وكالات السفر': ['الطيار', 'المسافر', 'سفريات الرياض', 'العالمية للسفر']
+};
+
 const allData = {};
-cats.forEach(c => {
+allCats.forEach(c => {
     let catName = c[1];
-    if (catName === 'أخبار السعودية اليوم' || catName === 'القوانين واللوائح') return; 
+    if (catName === 'أخبار السعودية اليوم' || catName === 'القوانين واللوائح') return;
     
     allData[catName] = {};
+    let brands = realBrands[catName] || [catName + ' المتميز', catName + ' المركزي', catName + ' الأول'];
+    
     for (const city in cityCenters) {
         allData[catName][city] = [];
-        let prefix = cityCenters[city][2];
         for (let i = 0; i < 20; i++) {
-            let name = catName + ' ' + (i + 1) + ' - ' + city;
-            let address = neighborhoods[i % neighborhoods.length] + ' - ' + city;
+            let brandName = brands[i % brands.length];
+            let neighborhood = neighborhoods[i % neighborhoods.length];
+            let name = brandName + ' - ' + neighborhood + ' - ' + city;
+            let address = neighborhood + ' - ' + city;
             let lat = cityCenters[city][0] + (Math.random() - 0.5) * 0.1;
             let lng = cityCenters[city][1] + (Math.random() - 0.5) * 0.1;
             let rating = (Math.random() * 1.5 + 3.5).toFixed(1);
-            let phone = prefix + Math.floor(1000000 + Math.random() * 9000000).toString();
+            let phone = emergencyNumbers[catName] ? emergencyNumbers[catName] : null;
             allData[catName][city].push([name, address, lat, lng, rating, phone]);
         }
     }
@@ -174,53 +163,45 @@ cats.forEach(c => {
 function render() {
     const grid = document.getElementById('categories-grid');
     grid.innerHTML = '';
-    cats.forEach((c, i) => {
+    allCats.forEach((c) => {
         const div = document.createElement('div');
         div.className = 'card';
-        div.onclick = () => openCat(c);
-        div.innerHTML = `<div class="card-icon">${c[0]}</div><div class="card-title">${c[currLang==='ar'?1:2]}</div>`;
+        div.onclick = () => openCat(c[1]);
+        div.innerHTML = `<div class="card-icon">${c[0]}</div><div class="card-title">${c[1]}</div>`;
         grid.appendChild(div);
     });
 }
 
-function openCat(c) {
-    if (currCity === 'none' && c[1] !== 'القوانين واللوائح' && c[1] !== 'أخبار السعودية اليوم') {
-        alert(ui[currLang].selectCityAlert);
-        return;
+function openCat(catName) {
+    if (currCity === 'none' && catName !== 'القوانين واللوائح' && catName !== 'أخبار السعودية اليوم') {
+        alert('من فضلك اختر مدينتك من الأعلى أولاً 📍'); return;
     }
     document.getElementById('home-view').classList.remove('active');
     document.getElementById('sub-view').classList.add('active');
-    document.getElementById('sub-title').innerText = c[currLang==='ar'?1:2];
-    document.getElementById('btn-back').innerText = ui[currLang].back;
+    document.getElementById('sub-title').innerText = catName;
     const content = document.getElementById('sub-content');
     
-    if (c[1] === 'أخبار السعودية اليوم' || c[1] === 'القوانين واللوائح') {
+    if (catName === 'أخبار السعودية اليوم' || catName === 'القوانين واللوائح') {
         content.innerHTML = `<div style="text-align:center; padding:40px; background:white; border-radius:12px;"><h2>جاري العمل</h2><p>سيتم إضافة بيانات هذا القسم قريباً.</p></div>`;
     } else {
-        const catData = allData[c[1]];
-        if (catData && catData[currCity]) {
-            content.innerHTML = `<button class="gps-btn" id="gps-btn" onclick="findNearest('custom')">${ui[currLang].gpsBtn}</button><div id="items-list"></div>`;
-            renderItemsList(catData[currCity], 'custom');
-        }
+        content.innerHTML = `<button class="gps-btn" onclick="findNearest('${catName}')">📍 اضغط لمعرفة الأقرب إليك</button><div id="items-list"></div>`;
+        renderItemsList(allData[catName][currCity]);
     }
 }
 
-function renderItemsList(items, type) {
+function renderItemsList(items) {
     const container = document.getElementById('items-list');
     container.innerHTML = '';
-    if (items.length === 0) return;
     items.forEach(item => {
         const div = document.createElement('div');
         div.className = 'item-card';
-        const mapLink = `https://www.google.com/maps/search/?api=1&query=${item[2]},${item[3]}`;
-        let ratingHtml = item[4] ? `<span class="rating-badge">⭐ ${item[4]}</span>` : '';
         let callHtml = item[5] ? `<a href="tel:${item[5]}" class="action-btn call-btn">📞 ${item[5]}</a>` : '';
         
         div.innerHTML = `
-            <div class="item-title"><span>${item[0]}</span> ${ratingHtml} <span class="distance-badge" id="dist-${item[2]}"></span></div>
+            <div class="item-title"><span>${item[0]}</span> <span class="rating-badge">⭐ ${item[4]}</span></div>
             <div class="item-address">📍 ${item[1]}</div>
             <div class="btn-group">
-                <a href="${mapLink}" target="_blank" class="action-btn map-btn">🗺️ ${ui[currLang].map}</a>
+                <a href="https://www.google.com/maps/search/?api=1&query=${item[2]},${item[3]}" target="_blank" class="action-btn map-btn">🗺️ الخريطة</a>
                 ${callHtml}
             </div>
         `;
@@ -228,29 +209,39 @@ function renderItemsList(items, type) {
     });
 }
 
-function findNearest(type) {
-    const btn = document.getElementById('gps-btn');
-    btn.innerText = ui[currLang].loadingGps;
+function findNearest(catName) {
+    const btn = document.querySelector('.gps-btn');
+    btn.innerText = 'جاري تحديد موقعك...';
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const userLat = position.coords.latitude;
-                const userLng = position.coords.longitude;
-                let items = [];
-                const activeCat = document.getElementById('sub-title').innerText;
-                const catData = allData[activeCat];
-                items = catData ? catData[currCity] : [];
+        navigator.geolocation.getCurrentPosition((position) => {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+            let items = allData[catName][currCity] || [];
+            let itemsWithDist = items.map(item => {
+                const dist = calculateDistance(userLat, userLng, item[2], item[3]);
+                return { data: item, distance: dist };
+            });
+            itemsWithDist.sort((a, b) => a.distance - b.distance);
+            
+            const container = document.getElementById('items-list');
+            container.innerHTML = '';
+            itemsWithDist.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'item-card';
+                let callHtml = item.data[5] ? `<a href="tel:${item.data[5]}" class="action-btn call-btn">📞 ${item.data[5]}</a>` : '';
                 
-                let itemsWithDistance = items.map(item => {
-                    const dist = calculateDistance(userLat, userLng, item[2], item[3]);
-                    return { data: item, distance: dist };
-                });
-                itemsWithDistance.sort((a, b) => a.distance - b.distance);
-                renderSortedItems(itemsWithDistance, type);
-                btn.style.display = 'none';
-            },
-            (error) => { alert('الرجاء السماح بالوصول للموقع.'); btn.innerText = ui[currLang].gpsBtn; }
-        );
+                div.innerHTML = `
+                    <div class="item-title"><span>${item.data[0]}</span> <span class="rating-badge">⭐ ${item.data[4]}</span> <span class="distance-badge" style="display:inline-block;">🚗 ${item.distance} كم</span></div>
+                    <div class="item-address">📍 ${item.data[1]}</div>
+                    <div class="btn-group">
+                        <a href="https://www.google.com/maps/search/?api=1&query=${item.data[2]},${item.data[3]}" target="_blank" class="action-btn map-btn">🗺️ الخريطة</a>
+                        ${callHtml}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            btn.style.display = 'none';
+        });
     }
 }
 
@@ -263,59 +254,20 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     return (R * c).toFixed(1);
 }
 
-function renderSortedItems(items, type) {
-    const container = document.getElementById('items-list');
-    container.innerHTML = '';
-    items.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'item-card';
-        const mapLink = `https://www.google.com/maps/search/?api=1&query=${item.data[2]},${item.data[3]}`;
-        let ratingHtml = item.data[4] ? `<span class="rating-badge">⭐ ${item.data[4]}</span>` : '';
-        let callHtml = item.data[5] ? `<a href="tel:${item.data[5]}" class="action-btn call-btn">📞 ${item.data[5]}</a>` : '';
-
-        div.innerHTML = `
-            <div class="item-title"><span>${item.data[0]}</span> ${ratingHtml} <span class="distance-badge" style="display:inline-block;">🚗 ${item.distance} كم</span></div>
-            <div class="item-address">📍 ${item.data[1]}</div>
-            <div class="btn-group">
-                <a href="${mapLink}" target="_blank" class="action-btn map-btn">🗺️ ${ui[currLang].map}</a>
-                ${callHtml}
-            </div>
-        `;
-        container.appendChild(div);
-    });
-}
-
 function goHome() {
     document.getElementById('sub-view').classList.remove('active');
     document.getElementById('home-view').classList.add('active');
-}
-
-function changeLanguage(lang, e) {
-    currLang = lang;
-    document.getElementById('app-title').innerText = ui[lang].title;
-    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-    e.target.classList.add('active');
-    render(); goHome();
 }
 
 function changeCity(cityCode) {
     currCity = cityCode;
     if (document.getElementById('sub-view').classList.contains('active')) {
         const currentTitle = document.getElementById('sub-title').innerText;
-        const activeCat = cats.find(c => c[1] === currentTitle || c[2] === currentTitle);
-        if(activeCat) openCat(activeCat);
+        openCat(currentTitle);
     }
 }
 
 render();
-
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/ahmed-guide/sw.js')
-            .then(registration => { console.log('ServiceWorker registered'); })
-            .catch(err => { console.log('ServiceWorker registration failed: ', err); });
-    });
-}
 </script>
 </body>
 </html>
